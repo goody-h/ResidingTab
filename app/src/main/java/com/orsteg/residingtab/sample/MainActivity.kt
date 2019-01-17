@@ -1,4 +1,4 @@
-package com.orsteg.residingtab.sample
+ package com.orsteg.residingtab.sample
 
 import android.support.design.widget.TabLayout
 import android.support.design.widget.Snackbar
@@ -7,15 +7,14 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.view.ViewPager
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
-
+import android.view.*
+import android.widget.LinearLayout
+import android.widget.Toast
+import com.orsteg.residingtab.RevealViewPager
 import kotlinx.android.synthetic.main.activity_main.*
+
+import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.fragment_main.view.*
 
 class MainActivity : AppCompatActivity() {
@@ -29,9 +28,14 @@ class MainActivity : AppCompatActivity() {
      * [android.support.v4.app.FragmentStatePagerAdapter].
      */
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
+    private val RESIDE_TAB_INDEX: Int = 0
+    private val START_INDEX: Int = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        window.decorView.systemUiVisibility = RevealViewPager.NOT_FULLSCREEN
+
         setContentView(R.layout.activity_main)
 
         setSupportActionBar(toolbar)
@@ -39,10 +43,42 @@ class MainActivity : AppCompatActivity() {
         // primary sections of the activity.
         mSectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
 
-        // Set up the ViewPager with the sections adapter.
-        container.adapter = mSectionsPagerAdapter
 
-        container.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabs))
+        container.apply {
+            // Set up the ViewPager with the sections adapter.
+            adapter = mSectionsPagerAdapter
+
+            //set offscreen limit to the number of tabs
+            offscreenPageLimit = 4
+
+            // Setup view pager with tabs
+            addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabs))
+
+            currentItem = START_INDEX
+
+            // Set residing view parameters
+
+            setOnResideTabVisibilityChangeListener(object : RevealViewPager.OnResideTabVisibilityChangeListener {
+                override fun onChanged(isVisible: Boolean) {
+                    // Todo: Do something on reside view or foreground when visibility changes
+                    if (isVisible) {
+                        Toast.makeText(this@MainActivity, "visible", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this@MainActivity, "invisible", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            })
+
+
+            setResidingView(reside_content, RESIDE_TAB_INDEX)
+            bindTransformedViews(appbar, reside_view_foreground, fab)
+            addForeground(bottom_layout)
+
+            initTransformer(savedInstanceState, false)
+        }
+
+        setupTab()
+        // Setup tabs with view pager
         tabs.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(container))
 
         fab.setOnClickListener { view ->
@@ -50,8 +86,40 @@ class MainActivity : AppCompatActivity() {
                     .setAction("Action", null).show()
         }
 
+        reside_content.setOnClickListener {
+            Toast.makeText(this@MainActivity, "Residing Tab clicked", Toast.LENGTH_SHORT).show()
+        }
+
+        fore.setOnClickListener {
+            Toast.makeText(this@MainActivity, "Foreground clicked", Toast.LENGTH_SHORT).show()
+        }
+
+        bottom_layout.setOnClickListener {
+            Toast.makeText(this@MainActivity, "bottom clicked", Toast.LENGTH_SHORT).show()
+        }
+
     }
 
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        container.saveState(outState)
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+
+        if (hasFocus) {
+            container.updateUIVisibility()
+        }
+    }
+
+    private fun setupTab() {
+        val tab = (tabs.getChildAt(0) as LinearLayout).getChildAt(0) as LinearLayout
+        val params = tab.layoutParams as LinearLayout.LayoutParams
+        params.weight = 0f
+        params.width = LinearLayout.LayoutParams.WRAP_CONTENT
+        tab.layoutParams = params
+    }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -81,13 +149,15 @@ class MainActivity : AppCompatActivity() {
 
         override fun getItem(position: Int): Fragment {
             // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
+            // Return a ResideRevealFragment if position = 0 else
+            // Return a PlaceHolderFragment (defined as a static inner class below).
+            if (position == RESIDE_TAB_INDEX) return ResideRevealFragment.newInstance()
             return PlaceholderFragment.newInstance(position + 1)
         }
 
         override fun getCount(): Int {
-            // Show 3 total pages.
-            return 3
+            // Show 4 total pages.
+            return 4
         }
     }
 
@@ -99,7 +169,12 @@ class MainActivity : AppCompatActivity() {
         override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                                   savedInstanceState: Bundle?): View? {
             val rootView = inflater.inflate(R.layout.fragment_main, container, false)
-            rootView.section_label.text = getString(R.string.section_format, arguments.getInt(ARG_SECTION_NUMBER))
+
+            //rootView.section_label.text = getString(R.string.section_format, arguments.getInt(ARG_SECTION_NUMBER))
+            rootView.back.setOnClickListener {
+                Toast.makeText(context, "back clicked", Toast.LENGTH_SHORT).show()
+            }
+
             return rootView
         }
 
@@ -120,6 +195,26 @@ class MainActivity : AppCompatActivity() {
                 args.putInt(ARG_SECTION_NUMBER, sectionNumber)
                 fragment.arguments = args
                 return fragment
+            }
+        }
+    }
+
+    /**
+     * The fragment that reveals the residing view.
+     */
+    class ResideRevealFragment : Fragment() {
+
+        override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                                  savedInstanceState: Bundle?): View? {
+            return null
+        }
+
+        companion object {
+            /**
+             * Returns a new instance of this fragment
+             */
+            fun newInstance(): ResideRevealFragment {
+                return ResideRevealFragment()
             }
         }
     }

@@ -1,70 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<!-- The parent of the reside layout should be a CoordinatorLayout in order to draw under system decorations-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_content"
+    android:id="@+id/reside_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context="com.orsteg.residingtab.sample.MainActivity">
+    tools:context=".MainActivity"
+    android:fitsSystemWindows="false">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/appbar_padding_top"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_weight="1"
-            android:background="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:title="@string/app_name">
-
-        </android.support.v7.widget.Toolbar>
-
-        <android.support.design.widget.TabLayout
-            android:id="@+id/tabs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <android.support.design.widget.TabItem
-                android:id="@+id/tabItem"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/tab_text_1" />
-
-            <android.support.design.widget.TabItem
-                android:id="@+id/tabItem2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/tab_text_2" />
-
-            <android.support.design.widget.TabItem
-                android:id="@+id/tabItem3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/tab_text_3" />
-
-        </android.support.design.widget.TabLayout>
-    </android.support.design.widget.AppBarLayout>
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/container"
+    <!-- This is the container view for the residing content. This view is drawn under system decorations -->
+    <FrameLayout
+        android:id="@+id/reside_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        android:background="@color/colorAccent">
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            app:srcCompat="@mipmap/back" />
+    </FrameLayout>
 
-</android.support.design.widget.CoordinatorLayout>
+    <!-- A frame layout that fits system windows, wrapped around the main layout-->
+    <FrameLayout
+        android:id="@+id/content_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
+        <!-- The main layout is added using an include tag. It is drawn over other views-->
+        <include
+            android:id="@+id/main_content"
+            layout="@layout/content_main"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
+</FrameLayout>

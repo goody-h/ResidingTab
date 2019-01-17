@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- The coordinator layout also should be the parent for the main layout in order to handle
+scrolling behaviours -->
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".MainActivity">
+
+    <!-- This view is placed on the foreground of the residing view. It does not fit system windows
+     and translates into view together with the first element of a ViewPager.
+     This view is drawn behind the ViewPager.
+     The gravity of its child should be set to bottom to avoid the jump that occurs when switching
+     to full screen-->
+    <FrameLayout
+        android:id="@+id/reside_view_foreground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="match_parent"
+                    android:layout_height="1000dp"
+                    android:text="TextView" />
+            </LinearLayout>
+        </ScrollView>
+
+        <TextView
+            android:id="@+id/fore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="30dp"
+            android:background="@android:color/holo_green_light"
+            android:padding="5dp"
+            android:text="Reside Tab Foreground"
+            android:textColor="@android:color/white" />
+    </FrameLayout>
+
+    <!-- The ViewPager for the main content. A negative margin greater or equal to the height of the
+    AppBarLayout is placed on this view in order to raise the top of the ViewPager from the bottom
+    of the AppBarLayout to the top, while maintaining the AppBarLayout.ScrollingViewBehaviour.
+    This margin is nullified by adding a positive padding equal to the margin to child fragment views.
+
+    The view is drawn behind the AppBar since the negative margin sets the view above it -->
+    <com.orsteg.residingtab.RevealViewPager
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-120dp"
+        android:fitsSystemWindows="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    </com.orsteg.residingtab.RevealViewPager>
+
+    <!-- The AppBar containing the Toolbar and the TabLayout -->
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_weight="1"
+            android:background="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|enterAlways|snap"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:title="@string/app_name">
+
+        </android.support.v7.widget.Toolbar>
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/tabItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:icon="@drawable/ic_camera_white_24dp" />
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/tabItem2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CHATS" />
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/tabItem3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="STATUS" />
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/tabItem4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CALLS" />
+
+        </android.support.design.widget.TabLayout>
+    </android.support.design.widget.AppBarLayout>
+
+    <FrameLayout
+        android:id="@+id/bottom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorAccent"
+        app:behavior_hideable="true"
+        app:behavior_peekHeight="100dp"
+        app:layout_behavior="@string/bottom_sheet_behavior">
+
+    </FrameLayout>
+
+    <!-- The FloatingActionButton for assigning click actions -->
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="@dimen/fab_margin"
+        app:srcCompat="@android:drawable/ic_dialog_email" />
+
+</android.support.design.widget.CoordinatorLayout>

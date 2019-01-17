@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".MainActivity">
+
+    <!-- This view is acts as the foreground of the residing view.
+     It translates into view together with the RevealViewPager's revealing position.
+     This view is drawn behind the ViewPager.
+     Replace this with any View of your choice-->
+    <FrameLayout
+        android:id="@+id/reside_view_foreground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- Sample foreground widget -->
+        <Button
+            android:id="@+id/foreground_widget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="50dp"
+            android:text="Foreground Button" />
+
+    </FrameLayout>
+
+    <!-- The ViewPager for the main content.  A negative margin greater or equal to the height of the
+    AppBarLayout is placed on this view in order to raise the top of the ViewPager from the bottom
+    of the AppBarLayout to the top, while maintaining the AppBarLayout.ScrollingViewBehaviour.
+
+    Adjust your margin to align with the top.
+
+    This margin is nullified by adding a positive padding equal to the margin to child fragment views.
+
+    The view is drawn behind the AppBar since the negative margin sets the view above it -->
+    <com.orsteg.residingtab.RevealViewPager
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="-105dp"
+        android:fitsSystemWindows="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <!-- The AppBar containing the Toolbar and the TabLayout -->
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_weight="1"
+            android:background="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|enterAlways|snap"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:title="@string/app_name">
+
+        </android.support.v7.widget.Toolbar>
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/tabItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tab 1" />
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/tabItem2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tab 2" />
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/tabItem3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tab 3" />
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/tabItem4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tab 4" />
+
+        </android.support.design.widget.TabLayout>
+    </android.support.design.widget.AppBarLayout>
+
+    <!-- The FloatingActionButton for assigning click actions -->
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="@dimen/fab_margin"
+        app:srcCompat="@android:drawable/ic_dialog_email" />
+
+</android.support.design.widget.CoordinatorLayout>
