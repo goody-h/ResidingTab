@@ -252,6 +252,11 @@ class RevealViewPager : ViewPager {
     }
 
     /**
+     * This method is called to get the current visibility state of the residing view
+     */
+    fun getIsResidingViewVisible() : Boolean = isTranslucentNav == true
+
+    /**
      * Call this method in the Activity class either in [Activity.onResume] or [Activity.onWindowFocusChanged]
      * in order to make sure windowUIVisibility is always in the correct state.
      */

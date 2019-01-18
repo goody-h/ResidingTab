@@ -95,7 +95,7 @@ and including the following dependency to your app level `build.gradle` file.
 ```groovy
 dependencies {
     
-    implementation 'com.github.Goody-h:ResidingTabView:v1.0.0'
+    implementation 'com.github.Goody-h:ResidingTab:v1.0.0'
     // ...
 }
 ```

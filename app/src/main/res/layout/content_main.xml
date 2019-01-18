@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<!-- The coordinator layout also should be the parent for the main layout in order to handle
-scrolling behaviours -->
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -10,60 +7,92 @@ scrolling behaviours -->
     android:fitsSystemWindows="true"
     tools:context=".MainActivity">
 
-    <!-- This view is placed on the foreground of the residing view. It does not fit system windows
-     and translates into view together with the first element of a ViewPager.
+    <!-- This view is acts as the foreground of the residing view.
+     It translates into view together with the RevealViewPager's revealing position.
      This view is drawn behind the ViewPager.
-     The gravity of its child should be set to bottom to avoid the jump that occurs when switching
-     to full screen-->
-    <FrameLayout
+     Replace this with any View of your choice-->
+    <RelativeLayout
         android:id="@+id/reside_view_foreground"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ScrollView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/fore"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
 
-                <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="match_parent"
-                    android:layout_height="1000dp"
-                    android:text="TextView" />
-            </LinearLayout>
-        </ScrollView>
+            <ImageButton
+                android:id="@+id/flash"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/inner_red_alpha"
+                app:srcCompat="@drawable/ic_flash_on_white_24dp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <ImageButton
+                android:id="@+id/snap"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:background="@drawable/ring"
+                android:padding="10dp"
+                app:srcCompat="@drawable/inner_red" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <ImageButton
+                android:id="@+id/front"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/inner_red_alpha"
+                app:srcCompat="@drawable/ic_switch_camera_white_24dp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/fore"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="30dp"
-            android:background="@android:color/holo_green_light"
-            android:padding="5dp"
-            android:text="Reside Tab Foreground"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="5dp"
+            android:text="Dummy Camera Widgets"
             android:textColor="@android:color/white" />
-    </FrameLayout>
+    </RelativeLayout>
 
-    <!-- The ViewPager for the main content. A negative margin greater or equal to the height of the
+    <!-- The ViewPager for the main content.  A negative margin greater or equal to the height of the
     AppBarLayout is placed on this view in order to raise the top of the ViewPager from the bottom
     of the AppBarLayout to the top, while maintaining the AppBarLayout.ScrollingViewBehaviour.
+
+    Adjust your margin to align with the top.
+
     This margin is nullified by adding a positive padding equal to the margin to child fragment views.
 
     The view is drawn behind the AppBar since the negative margin sets the view above it -->
     <com.orsteg.residingtab.RevealViewPager
         android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="-120dp"
+        android:layout_height="match_parent"
+        android:layout_marginTop="-105dp"
         android:fitsSystemWindows="true"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-    </com.orsteg.residingtab.RevealViewPager>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <!-- The AppBar containing the Toolbar and the TabLayout -->
     <android.support.design.widget.AppBarLayout
@@ -115,17 +144,6 @@ scrolling behaviours -->
 
         </android.support.design.widget.TabLayout>
     </android.support.design.widget.AppBarLayout>
-
-    <FrameLayout
-        android:id="@+id/bottom_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorAccent"
-        app:behavior_hideable="true"
-        app:behavior_peekHeight="100dp"
-        app:layout_behavior="@string/bottom_sheet_behavior">
-
-    </FrameLayout>
 
     <!-- The FloatingActionButton for assigning click actions -->
     <android.support.design.widget.FloatingActionButton

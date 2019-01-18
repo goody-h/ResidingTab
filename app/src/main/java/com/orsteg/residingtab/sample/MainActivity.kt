@@ -1,4 +1,4 @@
- package com.orsteg.residingtab.sample
+package com.orsteg.residingtab.sample
 
 import android.support.design.widget.TabLayout
 import android.support.design.widget.Snackbar
@@ -9,8 +9,7 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.os.Bundle
 import android.view.*
-import android.widget.LinearLayout
-import android.widget.Toast
+import android.widget.*
 import com.orsteg.residingtab.RevealViewPager
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -27,7 +26,7 @@ class MainActivity : AppCompatActivity() {
      * may be best to switch to a
      * [android.support.v4.app.FragmentStatePagerAdapter].
      */
-    private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
+    private var mRevealAdapter: RevealAdapter? = null
     private val RESIDE_TAB_INDEX: Int = 0
     private val START_INDEX: Int = 1
 
@@ -41,12 +40,12 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
+        mRevealAdapter = RevealAdapter(supportFragmentManager)
 
 
         container.apply {
             // Set up the ViewPager with the sections adapter.
-            adapter = mSectionsPagerAdapter
+            adapter = mRevealAdapter
 
             //set offscreen limit to the number of tabs
             offscreenPageLimit = 4
@@ -60,19 +59,16 @@ class MainActivity : AppCompatActivity() {
 
             setOnResideTabVisibilityChangeListener(object : RevealViewPager.OnResideTabVisibilityChangeListener {
                 override fun onChanged(isVisible: Boolean) {
-                    // Todo: Do something on reside view or foreground when visibility changes
                     if (isVisible) {
-                        Toast.makeText(this@MainActivity, "visible", Toast.LENGTH_SHORT).show()
+                        camera_preview.initCamera()
                     } else {
-                        Toast.makeText(this@MainActivity, "invisible", Toast.LENGTH_SHORT).show()
+                        camera_preview.destroyCamera()
                     }
                 }
             })
 
-
             setResidingView(reside_content, RESIDE_TAB_INDEX)
             bindTransformedViews(appbar, reside_view_foreground, fab)
-            addForeground(bottom_layout)
 
             initTransformer(savedInstanceState, false)
         }
@@ -82,7 +78,7 @@ class MainActivity : AppCompatActivity() {
         tabs.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(container))
 
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+            Snackbar.make(view, "Replace with yo ur own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
         }
 
@@ -90,14 +86,31 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this@MainActivity, "Residing Tab clicked", Toast.LENGTH_SHORT).show()
         }
 
-        fore.setOnClickListener {
-            Toast.makeText(this@MainActivity, "Foreground clicked", Toast.LENGTH_SHORT).show()
+        front.setOnClickListener {
+            Toast.makeText(this@MainActivity, "Front camera toggled", Toast.LENGTH_SHORT).show()
         }
 
-        bottom_layout.setOnClickListener {
-            Toast.makeText(this@MainActivity, "bottom clicked", Toast.LENGTH_SHORT).show()
+        flash.setOnClickListener {
+            Toast.makeText(this@MainActivity, "Flash button clicked", Toast.LENGTH_SHORT).show()
         }
 
+        snap.setOnClickListener {
+            Toast.makeText(this@MainActivity, "Say Cheeeese!!", Toast.LENGTH_SHORT).show()
+        }
+
+    }
+
+
+    override fun onPause() {
+        super.onPause()
+        camera_preview.destroyCamera()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (container.getIsResidingViewVisible()) {
+            camera_preview.initCamera()
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
@@ -107,7 +120,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-
         if (hasFocus) {
             container.updateUIVisibility()
         }
@@ -145,19 +157,32 @@ class MainActivity : AppCompatActivity() {
      * A [FragmentPagerAdapter] that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
-    inner class SectionsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
+    inner class RevealAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
         override fun getItem(position: Int): Fragment {
             // getItem is called to instantiate the fragment for the given page.
             // Return a ResideRevealFragment if position = 0 else
             // Return a PlaceHolderFragment (defined as a static inner class below).
-            if (position == RESIDE_TAB_INDEX) return ResideRevealFragment.newInstance()
+
+            if (position == RESIDE_TAB_INDEX) return ResideRevealFragment()
             return PlaceholderFragment.newInstance(position + 1)
         }
 
         override fun getCount(): Int {
             // Show 4 total pages.
             return 4
+        }
+    }
+
+
+    /**
+     * The fragment that reveals the residing view.
+     */
+    class ResideRevealFragment : Fragment() {
+
+        override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                                  savedInstanceState: Bundle?): View? {
+            return null
         }
     }
 
@@ -170,10 +195,7 @@ class MainActivity : AppCompatActivity() {
                                   savedInstanceState: Bundle?): View? {
             val rootView = inflater.inflate(R.layout.fragment_main, container, false)
 
-            //rootView.section_label.text = getString(R.string.section_format, arguments.getInt(ARG_SECTION_NUMBER))
-            rootView.back.setOnClickListener {
-                Toast.makeText(context, "back clicked", Toast.LENGTH_SHORT).show()
-            }
+            rootView.section_label.text = getString(R.string.section_format, arguments.getInt(ARG_SECTION_NUMBER))
 
             return rootView
         }
@@ -195,26 +217,6 @@ class MainActivity : AppCompatActivity() {
                 args.putInt(ARG_SECTION_NUMBER, sectionNumber)
                 fragment.arguments = args
                 return fragment
-            }
-        }
-    }
-
-    /**
-     * The fragment that reveals the residing view.
-     */
-    class ResideRevealFragment : Fragment() {
-
-        override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                                  savedInstanceState: Bundle?): View? {
-            return null
-        }
-
-        companion object {
-            /**
-             * Returns a new instance of this fragment
-             */
-            fun newInstance(): ResideRevealFragment {
-                return ResideRevealFragment()
             }
         }
     }
