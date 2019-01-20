@@ -1,0 +1,3 @@
+before_install:
+  - echo "running a custom command to fix cmake license issue"
+  - echo "y" | $ANDROID_HOME/tools/bin/sdkmanager "cmake;3.6.4111459"
