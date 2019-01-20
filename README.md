@@ -1,6 +1,12 @@
 # Residing Tab View
 A residing tab like WhatsApp's camera tab.
 
+## Screenshots
+Whatsapp's layout vs Residing Tab layout
+
+![](images/whatsapp_shot.png)
+![](images/reside_tab_shot.png)
+
 ## Table of Contents
 
 - [Introduction](#introduction)
@@ -25,7 +31,7 @@ When the null view Fragment slides into position, the transparency of the ViewPa
 
 
 ## Demo
-Download [demo](https://www.demo.com) application.
+Download [demo](https://drive.google.com/file/d/1Uy015Cpx8BK5_o11nPuJZdG5pAPTsPZJ/view?usp=sharing) application.
 
 ## Implementation
 The Following implementations were carried out in the layout and logic.
