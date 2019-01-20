@@ -79,7 +79,7 @@ To use this in developing a similar layout, you can fork this project and use th
 **Step 1:**
 Include the `RevealViewPager` class in your project either by;
 
-**1.** Forking the latest version and adding it directly to your project. Might be necessary if you want to make some changes to the class.
+**1.** Forking the latest version and adding it directly to your project (Might be necessary if you want to make some changes to the class).
 
 **2.** Getting it from `jitpack` by including the maven url for jitpack in your project level `build.gradle` file.
 ```groovy
@@ -118,7 +118,7 @@ Pass a reference of the residing View and its reveal position to the ViewPager b
 Set the views to be transformed; the appBar, residing foreground, FloatingActionButton, by calling `bindTransformedViews( )`.
 Set a `ResideTabVisibilityChangeListener` on the RevealViewPager by calling `setOnResideTabVisibilityChangeListener( )` to make changes to the residing view and its foreground based on its visibility.
 ```kotlin
-override fun onCreate() {
+override fun onCreate(savedInstanceState: Bundle?) {
   mRevealViewPager = findViewById(R.id.container)
   
   mRevealViewpager?.apply{
@@ -138,7 +138,7 @@ override fun onCreate() {
 Call the `initTransformer( )` method of the RevealViewPager after setting the initial tab position, 
 and pass the `savedInstanceState` from the `onCreate( )` method to it, including an optional boolean parameter to perform initial transformations.
 ```kotlin
-override fun onCreate() {
+override fun onCreate(savedInstanceState: Bundle?) {
   mRevealViewpager?.apply{
     // ...
     bindTransformedViews(appbar, reside_view_foreground, fab)
